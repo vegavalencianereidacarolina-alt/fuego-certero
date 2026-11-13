@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔥 Fuego Certero</title>
+  <title>🔥 FUEGO CERTERO - Arcade</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #1f1429 0%, #0c0814 100%);
+      background: radial-gradient(circle at 50% 20%, #161936 0%, #090a14 70%, #030408 100%);
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    #game-container {
+      position: relative;
+      width: min(92vw, 900px);
+      height: min(85vh, 650px);
+      box-shadow: 0 10px 40px rgba(255, 69, 0, 0.25), 0 0 20px rgba(0, 0, 0, 0.8);
+      border-radius: 16px;
+      width: min(94vw, 920px);
+      height: min(86vh, 660px);
+      box-shadow:
+        0 15px 50px rgba(255, 90, 20, 0.28),
+        0 0 0 2px rgba(255, 120, 40, 0.4),
+        0 0 35px rgba(255, 60, 0, 0.2);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 100, 30, 0.4);
+      background: #0d0b14;
+      background: #080a14;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+    }
+
+    /* UI Superior */
+    /* HUD Superior */
+    .hud {
+      position: absolute;
+      top: 14px;
+      left: 18px;
+      right: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .score-board {
+      .hud-left {
+        display: flex;
+        gap: 16px;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .badge {
+        background: rgba(20, 15, 30, 0.75);
+        border: 1px solid rgba(255, 120, 40, 0.5);
+        backdrop-filter: blur(8px);
+        padding: 8px 18px;
+        background: rgba(18, 14, 32, 0.75);
+        border: 1px solid rgba(255, 120, 40, 0.45);
+        backdrop-filter: blur(10px);
+        padding: 7px 16px;
+        border-radius: 30px;
+        font-size: 1.25rem;
+        font-size: 1.15rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .badge-primary {
+        color: #ff914d;
+        text-shadow: 0 0 10px rgba(255, 120, 40, 0.6);
+        color: #ff9d42;
+        text-shadow: 0 0 12px rgba(255, 130, 40, 0.7);
+      }
+
+      .badge-record {
+        .badge-lives {
+          color: #ff4d6d;
+          letter-spacing: 3px;
+          font-size: 1.25rem;
+        }
+
+        .badge-timer {
+          color: #ffd166;
+          font-size: 1rem;
+          font-variant-numeric: tabular-nums;
+        }
+
+        .controls-top {
+          pointer-events: auto;
+          display: flex;
+          gap: 10px;
+          gap: 8px;
+        }
+
+        .btn {
+          background: rgba(255, 85, 0, 0.15);
+          border: 1px solid rgba(255, 100, 30, 0.5);
+          color: #ffddc2;
+          background: rgba(255, 95, 20, 0.18);
+          border: 1px solid rgba(255, 120, 50, 0.5);
+          color: #ffe6d4;
+          padding: 7px 14px;
+          border-radius: 20px;
+          cursor: pointer;
+          font-weight: 600;
+          font-size: 0.9rem;
+          font-size: 0.88rem;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          box-shadow: 0 0 10px rgba(255, 100, 20, 0.15);
+        }
+
+        .btn:hover {
+          background: rgba(255, 95, 20, 0.35);
+          border-color: #ff7733;
+          background: rgba(255, 110, 30, 0.4);
+          border-color: #ffa35c;
+          box-shadow: 0 0 16px rgba(255, 120, 40, 0.4);
+          transform: translateY(-1px);
+        }
+
+        .btn:active {
+          transform: translateY(1px);
+        }
+
+        /* Instrucciones al pie */
+        .footer-help {
+
+          /* Notificación flotante de Récord */
+          #recordBanner {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            top: 75px;
+            left: 50%;
+            transform: translateX(-50%) scale(0.7);
+            background: linear-gradient(135deg, rgba(255, 180, 0, 0.95), rgba(255, 80, 0, 0.95));
+            color: #fff;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: 900;
+            font-size: 1.15rem;
+            letter-spacing: 1px;
+            box-shadow: 0 0 30px rgba(255, 180, 0, 0.8), 0 5px 15px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 25;
+            text-transform: uppercase;
+          }
+
+          #recordBanner.show {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+          }
+
+          /* Pantallas Overlay (Inicio & Game Over) */
+          .overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(16, 12, 30, 0.88) 0%, rgba(5, 4, 10, 0.96) 100%);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 40;
+            transition: opacity 0.3s ease;
+            padding: 24px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+          }
+
+          .overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+            letter-spacing: 0.5px;
+          }
+
+          .key-tag {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 2px 7px;
+            border-radius: 5px;
+
+            .game-title {
+              font-size: clamp(2.2rem, 5vw, 3.4rem);
+              font-weight: 900;
+              letter-spacing: 2px;
+              background: linear-gradient(180deg, #fff7d6 0%, #ffaa00 40%, #ff3700 80%);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              filter: drop-shadow(0 0 25px rgba(255, 90, 0, 0.7));
+              margin-bottom: 8px;
+            }
+
+            .game-subtitle {
+              color: #d1c8e6;
+              font-size: 1.05rem;
+              max-width: 480px;
+              margin-bottom: 24px;
+              line-height: 1.5;
+            }
+
+            .card-stats {
+              background: rgba(255, 255, 255, 0.05);
+              border: 1px solid rgba(255, 120, 50, 0.3);
+              padding: 16px 28px;
+              border-radius: 16px;
+              margin-bottom: 26px;
+              display: flex;
+              gap: 30px;
+            }
+
+            .stat-item {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+            }
+
+            .stat-label {
+              font-size: 0.8rem;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+              color: #aaa;
+            }
+
+            .stat-value {
+              font-size: 1.8rem;
+              font-weight: 800;
+              color: #ffb03a;
+              text-shadow: 0 0 15px rgba(255, 150, 0, 0.5);
+            }
+
+            .btn-play {
+              background: linear-gradient(135deg, #ff7b00 0%, #ff2a00 100%);
+              border: none;
+              color: #fff;
+              font-size: 1.25rem;
+              font-weight: 800;
+              padding: 14px 42px;
+              border-radius: 40px;
+              cursor: pointer;
+              box-shadow: 0 8px 30px rgba(255, 60, 0, 0.55), 0 0 0 3px rgba(255, 170, 70, 0.3);
+              letter-spacing: 1px;
+              transition: all 0.25s ease;
+              display: inline-flex;
+              align-items: center;
+              gap: 10px;
+            }
+
+            .btn-play:hover {
+              transform: translateY(-2px) scale(1.04);
+              box-shadow: 0 12px 35px rgba(255, 80, 0, 0.75), 0 0 0 4px rgba(255, 200, 100, 0.5);
+            }
+
+            .btn-play:active {
+              transform: translateY(1px) scale(0.98);
+            }
+
+            .instructions-box {
+              margin-top: 22px;
+              font-size: 0.85rem;
+              color: rgba(255, 255, 255, 0.7);
+              display: flex;
+              gap: 16px;
+              flex-wrap: wrap;
+              justify-content: center;
+            }
+
+            .key-badge {
+              background: rgba(255, 255, 255, 0.12);
+              border: 1px solid rgba(255, 255, 255, 0.25);
+              border-radius: 6px;
+              padding: 3px 8px;
+              color: #fff;
+              font-weight: 600;
+              font-weight: 700;
+            }
+
+            /* Pie de página con ayuda */
+            .footer-help {
+              position: absolute;
+              bottom: 8px;
+              left: 0;
+              right: 0;
+              text-align: center;
+              font-size: 0.82rem;
+              color: rgba(255, 255, 255, 0.55);
+              pointer-events: none;
+              z-index: 10;
+            }
+  </style>
+</head>
+
+<body>
+
+  <div id="game-container">
+    <!-- HUD Superior -->
+    <div class="hud">
+      <div class="score-board">
+        <div id="scoreBadge" class="badge badge-primary">Puntos: 0</div>
+        <div id="recordBadge" class="badge badge-record">Récord: 0</div>
+        <div class="hud-left">
+          <div id="scoreBadge" class="badge badge-primary">🎯 Puntos: 0</div>
+          <div id="livesBadge" class="badge badge-lives">❤️❤️❤️</div>
+          <div id="timerBadge" class="badge badge-timer">⏱️ 60s</div>
+        </div>
+        <div class="controls-top">
+          <button id="soundBtn" class="btn" title="Activar/Silenciar sonido">🔊 Sonido</button>
+          <button id="resetBtn" class="btn" title="Reiniciar puntuación">🔄 Reiniciar</button>
+          <button id="pauseBtn" class="btn" title="Pausar juego">⏸️</button>
+        </div>
+      </div>
+
+      <!-- Anuncio de Nuevo Récord -->
+      <div id="recordBanner">🎉 ¡NUEVO RÉCORD! 🎉</div>
+
+      <canvas id="gameCanvas"></canvas>
+
+      <!-- Pantalla de Inicio -->
+      <div id="startScreen" class="overlay">
+        <h1 class="game-title">🔥 FUEGO CERTERO</h1>
+        <p class="game-subtitle">Apunta con precisión nocturna, derriba los objetivos en movimiento y no dejes que se
+          agote tu tiempo ni tus vidas.</p>
+
+        <div class="card-stats">
+          <div class="stat-item">
+            <span class="stat-label">Mejor Récord</span>
+            <span id="startHighScore" class="stat-value">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Dificultad</span>
+            <span class="stat-value" style="color: #48cae4;">Progresiva</span>
+          </div>
+        </div>
+
+        <button id="startBtn" class="btn-play">🚀 ¡A JUGAR!</button>
+
+        <div class="instructions-box">
+          <span>🖱️ <span class="key-badge">Mueve el Ratón</span> para apuntar suavemente</span>
+          <span>💥 <span class="key-badge">Clic</span> o <span class="key-badge">Espacio</span> para disparar</span>
+          <span>❤️ Si fallas el tiro pierdes 1 vida</span>
+        </div>
+      </div>
+
+      <!-- Pantalla de Game Over -->
+      <div id="gameOverScreen" class="overlay hidden">
+        <h1 class="game-title"
+          style="background: linear-gradient(180deg, #ff8fa3 0%, #ff4d6d 50%, #c9184a 100%); -webkit-background-clip: text;">
+          💥 FIN DEL JUEGO</h1>
+        <p id="gameOverReason" class="game-subtitle">¡Se te acabaron las vidas!</p>
+
+        <div class="card-stats">
+          <div class="stat-item">
+            <span class="stat-label">Puntuación</span>
+            <span id="finalScore" class="stat-value">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Mejor Récord</span>
+            <span id="finalHighScore" class="stat-value">0</span>
+          </div>
+        </div>
+
+        <button id="restartBtn" class="btn-play">🔄 JUGAR DE NUEVO</button>
+      </div>
+
+      <div class="footer-help">
+        🎯 Apunta con el ratón &bull; Dispara con <span class="key-tag">Clic</span> o con la <span class="key-tag">Barra
+          Espaciadora</span>
+        Apunta con el ratón &bull; Dispara con <span class="key-badge">Clic</span> o <span
+          class="key-badge">Espacio</span>
+      </div>
+    </div>
+
+    <script>
+      // --- Configuración y Elementos DOM ---
+      // --- Referencias DOM ---
+      const canvas = document.getElementById('gameCanvas');
+      const ctx = canvas.getContext('2d');
+      const scoreBadge = document.getElementById('scoreBadge');
+      const recordBadge = document.getElementById('recordBadge');
+      const livesBadge = document.getElementById('livesBadge');
+      const timerBadge = document.getElementById('timerBadge');
+      const soundBtn = document.getElementById('soundBtn');
+      const resetBtn = document.getElementById('resetBtn');
+      const pauseBtn = document.getElementById('pauseBtn');
+      const recordBanner = document.getElementById('recordBanner');
+
+      const startScreen = document.getElementById('startScreen');
+      const startBtn = document.getElementById('startBtn');
+      const startHighScore = document.getElementById('startHighScore');
+
+      const gameOverScreen = document.getElementById('gameOverScreen');
+      const gameOverReason = document.getElementById('gameOverReason');
+      const finalScore = document.getElementById('finalScore');
+      const finalHighScore = document.getElementById('finalHighScore');
+      const restartBtn = document.getElementById('restartBtn');
+
+      let width = 0;
+      let height = 0;
+
+      // --- Audio Síntesis (Web Audio API) ---
+      // --- Sistema de Audio (Web Audio API) ---
+      let audioCtx = null;
+      let soundEnabled = true;
+
+      function initAudio() {
+        if (!audioCtx) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass) {
+            audioCtx = new AudioContextClass();
+          }
+          if (AudioContextClass) audioCtx = new AudioContextClass();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      }
+
+      // Sonido de disparo (Láser/cañonazo con crunch)
+      function playShootSound() {
+        if (!soundEnabled || !audioCtx) return;
+        try {
+          const now = audioCtx.currentTime;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc.type = 'sawtooth';
+
+          const now = audioCtx.currentTime;
+          osc.frequency.setValueAtTime(480, now);
+          osc.frequency.exponentialRampToValueAtTime(110, now + 0.15);
+          osc.frequency.setValueAtTime(540, now);
+          osc.frequency.exponentialRampToValueAtTime(80, now + 0.16);
+
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc.start(now);
+          osc.stop(now + 0.15);
+        } catch (e) {
+          // En caso de bloqueo de audio del navegador
+        }
+        osc.stop(now + 0.16);
+      } catch (e) { }
+    }
+
+      // Sonido de acierto (campana mágica brillante)
+      function playHitSound() {
+        if (!soundEnabled || !audioCtx) return;
+        try {
+          const now = audioCtx.currentTime;
+          const notes = [587.33, 880, 1174.66]; // D5, A5, D6
+          notes.forEach((freq, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = i === 1 ? 'sine' : 'triangle';
+            osc.frequency.setValueAtTime(freq, now + i * 0.04);
+            osc.frequency.exponentialRampToValueAtTime(freq * 1.2, now + i * 0.04 + 0.18);
+
+            // Sonido de campana / acierto brillante
+            const osc1 = audioCtx.createOscillator();
+            const osc2 = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            gain.gain.setValueAtTime(0.18, now + i * 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.04 + 0.22);
+
+            osc1.type = 'sine';
+            osc2.type = 'triangle';
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc1.frequency.setValueAtTime(587.33, now); // D5
+            osc1.frequency.exponentialRampToValueAtTime(880, now + 0.12); // A5
+            osc.start(now + i * 0.04);
+            osc.stop(now + i * 0.04 + 0.22);
+          });
+        } catch (e) { }
+      }
+
+      osc2.frequency.setValueAtTime(880, now);
+      osc2.frequency.exponentialRampToValueAtTime(1174.66, now + 0.12); // D6
+      // Sonido de fallo (wobble / grave suave)
+      function playMissSound() {
+        if (!soundEnabled || !audioCtx) return;
+        try {
+          const now = audioCtx.currentTime;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          gain.gain.setValueAtTime(0.22, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(180, now);
+          osc.frequency.exponentialRampToValueAtTime(70, now + 0.2);
+
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 0.28);
+          osc2.stop(now + 0.28);
+        } catch (e) {
+          // Ignorar errores de audio
+        }
+        osc.start(now);
+        osc.stop(now + 0.2);
+      } catch (e) { }
+    }
+
+      // Sonido de nuevo récord (Fanfarria alegre)
+      function playRecordSound() {
+        if (!soundEnabled || !audioCtx) return;
+        try {
+          const now = audioCtx.currentTime;
+          const freqs = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+          freqs.forEach((freq, idx) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.09);
+
+            gain.gain.setValueAtTime(0.25, now + idx * 0.09);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.28);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(now + idx * 0.09);
+            osc.stop(now + idx * 0.09 + 0.28);
+          });
+        } catch (e) { }
+      }
+
+      // Sonido de Game Over
+      function playGameOverSound() {
+        if (!soundEnabled || !audioCtx) return;
+        try {
+          const now = audioCtx.currentTime;
+          const freqs = [330, 293.66, 261.63, 196];
+          freqs.forEach((freq, idx) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+
+            gain.gain.setValueAtTime(0.2, now + idx * 0.12);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.25);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(now + idx * 0.12);
+            osc.stop(now + idx * 0.12 + 0.25);
+          });
+        } catch (e) { }
+      }
+
+      soundBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        initAudio();
+        soundEnabled = !soundEnabled;
+        soundBtn.textContent = soundEnabled ? '🔊 Sonido' : '🔇 Silencio';
+      });
+
+      // --- Estado del Juego ---
+      let gameState = 'START'; // 'START', 'PLAYING', 'PAUSED', 'GAMEOVER'
+      let score = 0;
+      let lives = 3;
+      let timeLeft = 60;
+      let timerInterval = null;
+      let highScore = parseInt(localStorage.getItem('fuego_certero_record') || '0', 10);
+      recordBadge.textContent = `Récord: ${highScore}`;
+      let recordBeatenThisRound = false;
+
+      // Posición del ratón / mira
+      const mouse = {
+        x: 0,
+        y: 0
+      };
+      startHighScore.textContent = highScore;
+
+      // Cañón (Fijo abajo al centro)
+      // Ratón y puntería
+      const mouse = { x: 0, y: 0 };
+
+      // Cañón con giro suave
+      const cannon = {
+        x: 0,
+        y: 0,
+        barrelLength: 48,
+        barrelWidth: 16,
+        angle: -Math.PI / 2,
+        baseRadius: 32,
+        recoil: 0
+      barrelLength: 52,
+        barrelWidth: 18,
+        angle: -Math.PI / 2,         // Ángulo actual interpolado
+        targetAngle: -Math.PI / 2,   // Ángulo deseado hacia el ratón
+        turnSpeed: 0.14,             // Suavizado lerp (giro suave)
+        baseRadius: 36,
+        recoil: 0,
+        glowIntensity: 0.5
+      };
+
+      // Balas y partículas
+      // Colecciones de entidades
+      let bullets = [];
+      let particles = [];
+      let shockwaves = [];
+      let floatTexts = [];
+      let stars = [];
+      let target = null;
+      let targetPulse = 0;
+
+      // Cooldown para disparar (evitar 60 balas por segundo al mantener espacio)
+      // Cooldown para disparar
+      let lastShotTime = 0;
+      const SHOT_COOLDOWN_MS = 160;
+      const SHOT_COOLDOWN_MS = 170;
+
+      // Ajuste de tamaño dinámico
+      // Screen shake al acertar o fallar
+      let screenShake = 0;
+
+      // Generar cielo nocturno con estrellas centelleantes
+      function initStars() {
+        stars = [];
+        const count = 75;
+        for (let i = 0; i < count; i++) {
+          stars.push({
+            x: Math.random() * width,
+            y: Math.random() * (height * 0.8),
+            size: Math.random() * 2 + 0.6,
+            baseAlpha: Math.random() * 0.6 + 0.3,
+            speed: Math.random() * 0.05 + 0.015,
+            phase: Math.random() * Math.PI * 2
+          });
+        }
+      }
+
+      // Redimensionar canvas manteniendo proporciones
+      function resizeCanvas() {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        width = canvas.width;
+        height = canvas.height;
+
+        cannon.x = width / 2;
+        cannon.y = height - 12;
+
+        // Si no hay objetivo o está fuera, crear uno
+        if (!target) {
+          spawnTarget();
+        } else {
+          // Asegurar que el objetivo existente quede dentro de los límites
+          target.x = Math.max(50, Math.min(width - 50, target.x));
+          target.y = Math.max(80, Math.min(height * 0.65, target.y));
+          initStars();
+
+          if (target) {
+            target.x = Math.max(60, Math.min(width - 60, target.x));
+            target.y = Math.max(90, Math.min(height * 0.62, target.y));
+          }
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        // Generar nuevo objetivo en una posición aleatoria en la parte superior
+        // Dificultad progresiva: genera objetivos que se mueven o son más ágiles
+        function spawnTarget() {
+          const radius = 24;
+          const marginX = 60;
+          const minY = 80;
+          const maxY = Math.max(minY + 60, height * 0.65);
+          const radius = Math.max(20, 26 - Math.min(6, Math.floor(score / 8)));
+          const marginX = 70;
+          const minY = 90;
+          const maxY = Math.max(minY + 80, height * 0.62);
+
+          const x = marginX + Math.random() * (width - marginX * 2);
+          const y = minY + Math.random() * (maxY - minY);
+
+          // Movimiento lateral progresivo según la puntuación
+          let speedX = 0;
+          if (score >= 3) {
+            const baseSpeed = 1.2 + Math.min(3.2, score * 0.15);
+            speedX = (Math.random() > 0.5 ? 1 : -1) * baseSpeed;
+          }
+
+          target = {
+            x: x,
+            y: y,
+            baseY: y,
+            radius: radius,
+            colorRing: '#ff3344',
+            colorCenter: '#ffe066',
+            speedX: speedX,
+            floatTime: Math.random() * 10,
+            floatSpeed: 0.04 + Math.random() * 0.02,
+            floatAmp: 6 + Math.random() * 4,
+            hue: (score * 25) % 360,
+            createdAt: performance.now()
+          };
+        }
+
+        // Disparar proyectil
+        // Disparar
+        function shoot() {
+          if (gameState !== 'PLAYING') return;
+
+          initAudio();
+          const now = performance.now();
+          if (now - lastShotTime < SHOT_COOLDOWN_MS) return;
+          lastShotTime = now;
+
+          // Calcular la punta del cañón
+          // Calcular la boca del cañón
+          const tipX = cannon.x + Math.cos(cannon.angle) * cannon.barrelLength;
+          const tipY = cannon.y + Math.sin(cannon.angle) * cannon.barrelLength;
+
+          const speed = 12; // Velocidad de la bala
+          const speed = 14;
+          const vx = Math.cos(cannon.angle) * speed;
+          const vy = Math.sin(cannon.angle) * speed;
+
+          bullets.push({
+            x: tipX,
+            y: tipY,
+            vx: vx,
+            vy: vy,
+            radius: 6,
+            life: 0
+          });
+
+          // Efecto de retroceso del cañón
+          cannon.recoil = 8;
+          // Retroceso y fogonazo
+          cannon.recoil = 10;
+          cannon.glowIntensity = 1;
+
+          // Pequeñas chispas de fogonazo en la boca del cañón
+          for (let i = 0; i < 6; i++) {
+            const spread = (Math.random() - 0.5) * 0.8;
+            const sparkSpeed = 2 + Math.random() * 4;
+            // Chispas del fogonazo
+            for (let i = 0; i < 8; i++) {
+              const spread = (Math.random() - 0.5) * 0.7;
+              const sparkSpeed = 2 + Math.random() * 5;
+              particles.push({
+                x: tipX,
+                y: tipY,
+                vx: Math.cos(cannon.angle + spread) * sparkSpeed,
+                vy: Math.sin(cannon.angle + spread) * sparkSpeed,
+                radius: 2 + Math.random() * 2,
+                color: Math.random() > 0.5 ? '#ffaa00' : '#ff4400',
+                color: Math.random() > 0.4 ? '#ffb703' : '#ff4d00',
+                alpha: 1,
+                decay: 0.08
+              });
+            }
+
+            playShootSound();
+          }
+
+          // Efecto de explosión al darle al objetivo
+          function createHitExplosion(x, y) {
+            for (let i = 0; i < 22; i++) {
+              // Explosión espectacular al acertar el objetivo
+              function createTargetExplosion(x, y, hue) {
+                // 1. Onda expansiva brillante
+                shockwaves.push({
+                  x: x,
+                  y: y,
+                  radius: 8,
+                  maxRadius: 55,
+                  alpha: 1,
+                  color: `hsl(${hue}, 100%, 65%)`
+                });
+
+                // 2. Chispas y fragmentos de fuego
+                const count = 30;
+                for (let i = 0; i < count; i++) {
+                  const angle = Math.random() * Math.PI * 2;
+                  const speed = 2 + Math.random() * 6;
+                  const colors = ['#ffe066', '#ff7700', '#ff2200', '#ffffff'];
+                  const speed = 2 + Math.random() * 7;
+                  particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    vy: Math.sin(angle) * speed - 0.5,
+                    radius: 2.5 + Math.random() * 3.5,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    color: i % 2 === 0 ? `hsl(${hue}, 100%, 60%)` : '#fff3b0',
+                    alpha: 1,
+                    decay: 0.03 + Math.random() * 0.03
+          decay: 0.025 + Math.random() * 0.035,
+                    gravity: 0.08
+                  });
+                }
+
+                // 3. Texto flotante "+100" o "+1"
+                floatTexts.push({
+                  x: x,
+                  y: y - 10,
+                  text: '+100',
+                  alpha: 1,
+                  vy: -1.8
+                });
+
+                // Sacudida de pantalla sutil y satisfactoria
+                screenShake = 5;
+              }
+
+              // Reiniciar puntuación
+              function resetScore() {
+                // Efecto de polvo / chispa al fallar (bala sale de pantalla)
+                function createMissPuff(x, y) {
+                  for (let i = 0; i < 8; i++) {
+                    particles.push({
+                      x: Math.max(10, Math.min(width - 10, x)),
+                      y: Math.max(10, Math.min(height - 10, y)),
+                      vx: (Math.random() - 0.5) * 3,
+                      vy: (Math.random() - 0.5) * 3,
+                      radius: 2 + Math.random() * 2,
+                      color: '#8d99ae',
+                      alpha: 0.8,
+                      decay: 0.05
+                    });
+                  }
+                }
+
+                // Perder una vida cuando se falla un tiro
+                function loseLife() {
+                  lives--;
+                  updateLivesBadge();
+                  playMissSound();
+                  screenShake = 6;
+
+                  if (lives <= 0) {
+                    endGame('¡Te has quedado sin vidas! Intenta afinar tu puntería.');
+                  }
+                }
+
+                function updateLivesBadge() {
+                  let hearts = '';
+                  for (let i = 0; i < 3; i++) {
+                    hearts += (i < lives) ? '❤️' : '🖤';
+                  }
+                  livesBadge.textContent = hearts;
+                }
+
+                // Mostrar cartel de nuevo récord
+                function triggerRecordCelebration() {
+                  recordBanner.classList.add('show');
+                  playRecordSound();
+                  setTimeout(() => {
+                    recordBanner.classList.remove('show');
+                  }, 2600);
+                }
+
+                // Iniciar Juego
+                function startGame() {
+                  initAudio();
+                  gameState = 'PLAYING';
+                  score = 0;
+                  scoreBadge.textContent = `Puntos: ${score}`;
+                  lives = 3;
+                  timeLeft = 60;
+                  recordBeatenThisRound = false;
+
+                  scoreBadge.textContent = `🎯 Puntos: ${score}`;
+                  updateLivesBadge();
+                  timerBadge.textContent = `⏱️ ${timeLeft}s`;
+
+                  bullets = [];
+                  particles = [];
+                  shockwaves = [];
+                  floatTexts = [];
+
+                  startScreen.classList.add('hidden');
+                  gameOverScreen.classList.add('hidden');
+
+                  spawnTarget();
+
+                  // Temporizador de 60 segundos
+                  if (timerInterval) clearInterval(timerInterval);
+                  timerInterval = setInterval(() => {
+                    if (gameState === 'PLAYING') {
+                      timeLeft--;
+                      timerBadge.textContent = `⏱️ ${timeLeft}s`;
+
+                      if (timeLeft <= 10) {
+                        timerBadge.style.color = '#ff3333';
+                      } else {
+                        timerBadge.style.color = '#ffd166';
+                      }
+
+                      if (timeLeft <= 0) {
+                        endGame('¡Se acabó el tiempo! Lograste una gran puntuación.');
+                      }
+                    }
+                  }, 1000);
+                }
+
+                resetBtn.addEventListener('click', (e) => {
+                  // Fin del Juego
+                  function endGame(reason) {
+                    gameState = 'GAMEOVER';
+                    if (timerInterval) clearInterval(timerInterval);
+                    playGameOverSound();
+
+                    gameOverReason.textContent = reason;
+                    finalScore.textContent = score;
+                    finalHighScore.textContent = highScore;
+
+                    gameOverScreen.classList.remove('hidden');
+                  }
+
+                  startBtn.addEventListener('click', startGame);
+                  restartBtn.addEventListener('click', startGame);
+
+                  // Botón de Pausa
+                  pauseBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    resetScore();
+                    if (gameState === 'PLAYING') {
+                      gameState = 'PAUSED';
+                      pauseBtn.textContent = '▶️';
+                    } else if (gameState === 'PAUSED') {
+                      gameState = 'PLAYING';
+                      pauseBtn.textContent = '⏸️';
+                    }
+                  });
+
+                  // Control de eventos: Ratón
+                  // Control de eventos: Apuntar con suavizado
+                  function updateAim(clientX, clientY) {
+                    const rect = canvas.getBoundingClientRect();
+                    mouse.x = clientX - rect.left;
+                    mouse.y = clientY - rect.top;
+
+                    // Calcular ángulo hacia la mira (restringido para disparar hacia arriba)
+                    // Ángulo deseado hacia el cursor
+                    const dx = mouse.x - cannon.x;
+                    const dy = mouse.y - cannon.y;
+                    let angle = Math.atan2(dy, dx);
+
+                    // Limitar el ángulo para que no apunte hacia el suelo (-170° a -10°)
+                    // Limitar entre -170° y -10° para que solo apunte hacia arriba
+                    const minAngle = -Math.PI + 0.15;
+                    const maxAngle = -0.15;
+                    cannon.angle = Math.max(minAngle, Math.min(maxAngle, angle));
+                    cannon.targetAngle = Math.max(minAngle, Math.min(maxAngle, angle));
+                  }
+
+                  window.addEventListener('mousemove', (e) => {
+                    updateAim(e.clientX, e.clientY);
+                  });
+
+                  // Soporte táctil en pantallas touch
+                  canvas.addEventListener('touchmove', (e) => {
+                    if (e.touches.length > 0) {
+                      updateAim(e.touches[0].clientX, e.touches[0].clientY);
+                    }
+                  }, { passive: true });
+
+                  canvas.addEventListener('touchstart', (e) => {
+                    if (e.touches.length > 0) {
+                      updateAim(e.touches[0].clientX, e.touches[0].clientY);
+                      shoot();
+                    }
+                  }, { passive: true });
+
+                  // Disparar con clic del ratón
+                  window.addEventListener('mousedown', (e) => {
+                    // Si hizo clic en un botón superior, no disparar
+                    if (e.target.closest('.controls-top')) return;
+                    if (e.target.closest('.controls-top') || e.target.closest('.overlay') || e.target.closest('button')) return;
+                    shoot();
+                  });
+
+                  // Disparar con barra espaciadora
+                  window.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space' || e.key === ' ') {
+                      e.preventDefault(); // Evitar scroll de la página
+                      e.preventDefault();
+                      shoot();
+                    }
+                  });
+
+                  // --- Bucle Principal del Juego ---
+                  // --- Bucle de Actualización (Update) ---
+                  function update() {
+                    targetPulse += 0.05;
+                    if (gameState !== 'PLAYING' && gameState !== 'PAUSED') {
+                      // En pantalla de inicio, girar lentamente hacia el centro/mouse
+                      cannon.angle += (cannon.targetAngle - cannon.angle) * 0.1;
+                    }
+
+                    // Suavizar el retroceso del cañón
+                    if (cannon.recoil > 0) {
+                      cannon.recoil -= 0.6;
+                      if (cannon.recoil < 0) cannon.recoil = 0;
+                      if (gameState !== 'PLAYING') return;
+
+                      // 1. Giro suave del cañón hacia el objetivo con LERP
+                      cannon.angle += (cannon.targetAngle - cannon.angle) * cannon.turnSpeed;
+
+                      // Disminuir retroceso y brillo gradualmente
+                      if (cannon.recoil > 0) cannon.recoil *= 0.82;
+                      if (cannon.glowIntensity > 0.4) cannon.glowIntensity *= 0.94;
+                      if (screenShake > 0) screenShake *= 0.85;
+
+                      // 2. Actualizar objetivo (flotación y movimiento lateral)
+                      if (target) {
+                        target.floatTime += target.floatSpeed;
+                        target.y = target.baseY + Math.sin(target.floatTime) * target.floatAmp;
+
+                        // Patrullaje horizontal si tiene velocidad
+                        if (target.speedX !== 0) {
+                          target.x += target.speedX;
+                          const pad = target.radius + 35;
+                          if (target.x < pad) {
+                            target.x = pad;
+                            target.speedX = Math.abs(target.speedX);
+                          } else if (target.x > width - pad) {
+                            target.x = width - pad;
+                            target.speedX = -Math.abs(target.speedX);
+                          }
+                        }
+                      }
+
+                      // 1. Actualizar balas
+                      // 3. Actualizar balas
+                      for (let i = bullets.length - 1; i >= 0; i--) {
+                        const b = bullets[i];
+                        b.x += b.vx;
+                        b.y += b.vy;
+                        b.life++;
+
+                        // Dejar estela de fuego en la bala
+                        // Estela de fuego
+                        if (b.life % 2 === 0) {
+                          particles.push({
+                            x: b.x - b.vx * 0.3,
+                            y: b.y - b.vy * 0.3,
+                            vx: (Math.random() - 0.5) * 0.5,
+                            vy: (Math.random() - 0.5) * 0.5,
+                            vx: (Math.random() - 0.5) * 0.6,
+                            vy: (Math.random() - 0.5) * 0.6,
+                            radius: 3,
+                            color: '#ff9900',
+                            alpha: 0.7,
+                            decay: 0.07
+            color: '#ff8800',
+                            alpha: 0.75,
+                            decay: 0.065
+                          });
+                        }
+
+                        // Detección de colisión: Bala vs Objetivo
+                        // Colisión: Bala vs Objetivo
+                        if (target) {
+                          const dist = Math.hypot(b.x - target.x, b.y - target.y);
+                          if (dist < b.radius + target.radius) {
+                            // ¡Impacto certero!
+                            createHitExplosion(target.x, target.y);
+                            createTargetExplosion(target.x, target.y, target.hue);
+                            playHitSound();
+
+                            score++;
+                            scoreBadge.textContent = `Puntos: ${score}`;
+                            scoreBadge.textContent = `🎯 Puntos: ${score}`;
+
+                            // Bonus de tiempo por buen tiro: +2 segundos
+                            timeLeft = Math.min(99, timeLeft + 2);
+                            timerBadge.textContent = `⏱️ ${timeLeft}s`;
+
+                            // Verificar si supera récord
+                            if (score > highScore) {
+                              highScore = score;
+                              localStorage.setItem('fuego_certero_record', highScore);
+                              recordBadge.textContent = `Récord: ${highScore}`;
+                              startHighScore.textContent = highScore;
+
+                              if (!recordBeatenThisRound && score > 1) {
+                                recordBeatenThisRound = true;
+                                triggerRecordCelebration();
+                              }
+                            }
+
+                            // Eliminar bala
+                            bullets.splice(i, 1);
+
+                            // Generar nuevo objetivo en otro sitio
+                            spawnTarget();
+                            continue;
+                          }
+                        }
+
+                        // Si la bala se sale de la pantalla, desaparece
+                        if (b.x < -10 || b.x > width + 10 || b.y < -10 || b.y > height + 10) {
+                          // Bala sale de la pantalla: ¡Fallo!
+                          if (b.x < -15 || b.x > width + 15 || b.y < -15 || b.y > height + 15) {
+                            createMissPuff(b.x, b.y);
+                            bullets.splice(i, 1);
+                            loseLife();
+                          }
+                        }
+
+                        // 2. Actualizar partículas
+                        // 4. Actualizar partículas
+                        for (let i = particles.length - 1; i >= 0; i--) {
+                          const p = particles[i];
+                          p.x += p.vx;
+                          p.y += p.vy;
+                          if (p.gravity) p.vy += p.gravity;
+                          p.alpha -= p.decay;
+                          if (p.alpha <= 0) {
+                            particles.splice(i, 1);
+                          }
+                          if (p.alpha <= 0) particles.splice(i, 1);
+                        }
+
+                        // 5. Actualizar ondas expansivas (shockwaves)
+                        for (let i = shockwaves.length - 1; i >= 0; i--) {
+                          const sw = shockwaves[i];
+                          sw.radius += 2.8;
+                          sw.alpha -= 0.05;
+                          if (sw.alpha <= 0) shockwaves.splice(i, 1);
+                        }
+
+                        // 6. Actualizar textos flotantes
+                        for (let i = floatTexts.length - 1; i >= 0; i--) {
+                          const ft = floatTexts[i];
+                          ft.y += ft.vy;
+                          ft.alpha -= 0.03;
+                          if (ft.alpha <= 0) floatTexts.splice(i, 1);
+                        }
+                      }
+
+                      // --- Dibujado (Draw) ---
+                      function draw() {
+                        ctx.save();
+
+                        // Efecto de sacudida de pantalla (Screen Shake)
+                        if (screenShake > 0.3) {
+                          const shakeX = (Math.random() - 0.5) * screenShake * 2;
+                          const shakeY = (Math.random() - 0.5) * screenShake * 2;
+                          ctx.translate(shakeX, shakeY);
+                        }
+
+                        ctx.clearRect(0, 0, width, height);
+
+                        // Fondo con sutil cuadrícula cibernética / radar
+                        ctx.strokeStyle = 'rgba(255, 100, 30, 0.05)';
+                        ctx.lineWidth = 1;
+                        const step = 40;
+                        for (let x = 0; x < width; x += step) {
+                          // 1. FONDO NOCTURNO: Cielo degradado + Nebulosa sutil
+                          const skyGrad = ctx.createLinearGradient(0, 0, 0, height);
+                          skyGrad.addColorStop(0, '#0a0d24');
+                          skyGrad.addColorStop(0.4, '#101332');
+                          skyGrad.addColorStop(0.8, '#1b1330');
+                          skyGrad.addColorStop(1, '#080812');
+                          ctx.fillStyle = skyGrad;
+                          ctx.fillRect(0, 0, width, height);
+
+                          // Resplandor de nebulosa violeta/cálido
+                          const nebula = ctx.createRadialGradient(width * 0.3, height * 0.35, 50, width * 0.3, height * 0.35, 320);
+                          nebula.addColorStop(0, 'rgba(120, 50, 180, 0.18)');
+                          nebula.addColorStop(1, 'rgba(120, 50, 180, 0)');
+                          ctx.fillStyle = nebula;
+                          ctx.fillRect(0, 0, width, height);
+
+                          // Luna brillante con halo
+                          const moonX = width * 0.85;
+                          const moonY = 85;
+                          const moonRadius = 24;
+
+                          const moonGlow = ctx.createRadialGradient(moonX, moonY, moonRadius * 0.5, moonX, moonY, moonRadius * 3);
+                          moonGlow.addColorStop(0, 'rgba(255, 245, 200, 0.25)');
+                          moonGlow.addColorStop(1, 'rgba(255, 245, 200, 0)');
+                          ctx.fillStyle = moonGlow;
+                          ctx.beginPath();
+                          ctx.arc(moonX, moonY, moonRadius * 3, 0, Math.PI * 2);
+                          ctx.fill();
+
+                          // Disco lunar
+                          ctx.fillStyle = '#fff4d4';
+                          ctx.beginPath();
+                          ctx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
+                          ctx.fill();
+
+                          // Sombra de cráter suave
+                          ctx.fillStyle = 'rgba(225, 210, 175, 0.4)';
+                          ctx.beginPath();
+                          ctx.arc(moonX - 5, moonY - 3, 5, 0, Math.PI * 2);
+                          ctx.arc(moonX + 6, moonY + 6, 7, 0, Math.PI * 2);
+                          ctx.arc(moonX - 7, moonY + 8, 4, 0, Math.PI * 2);
+                          ctx.fill();
+
+                          // Estrellas titilantes
+                          const time = performance.now() * 0.002;
+                          for (const star of stars) {
+                            const alpha = star.baseAlpha + Math.sin(time + star.phase) * 0.25;
+                            ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0.1, alpha)})`;
+                            ctx.beginPath();
+                            ctx.moveTo(x, 0);
+                            ctx.lineTo(x, height);
+                            ctx.stroke();
+                            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                            ctx.fill();
+                          }
+                          for (let y = 0; y < height; y += step) {
+                            ctx.beginPath();
+                            ctx.moveTo(0, y);
+                            ctx.lineTo(width, y);
+                            ctx.stroke();
+
+                            // Silueta de ciudad / edificios al horizonte inferior
+                            ctx.fillStyle = 'rgba(12, 10, 22, 0.75)';
+                            const skylineY = height - 55;
+                            const buildingCount = 22;
+                            const bWidth = width / buildingCount;
+                            for (let i = 0; i < buildingCount; i++) {
+                              // Altura pseudo-fija pero variada según el índice
+                              const bHeight = 25 + Math.sin(i * 99) * 20 + (i % 3) * 12;
+                              ctx.fillRect(i * bWidth, skylineY - bHeight, bWidth + 1, bHeight + 60);
+
+                              // Ventanitas encendidas
+                              if (i % 2 === 0) {
+                                ctx.fillStyle = 'rgba(255, 220, 130, 0.35)';
+                                ctx.fillRect(i * bWidth + 4, skylineY - bHeight + 6, 3, 3);
+                                ctx.fillRect(i * bWidth + 12, skylineY - bHeight + 14, 3, 3);
+                                ctx.fillStyle = 'rgba(12, 10, 22, 0.75)';
+                              }
+                            }
+
+                            // Línea guía sutil de puntería desde el cañón hacia el mouse
+                            ctx.save();
+                            ctx.strokeStyle = 'rgba(255, 150, 50, 0.2)';
+                            ctx.lineWidth = 1.5;
+                            ctx.setLineDash([4, 6]);
+                            // Suelo metálico de la base del cañón
+                            const floorGrad = ctx.createLinearGradient(0, height - 35, 0, height);
+                            floorGrad.addColorStop(0, '#1c162b');
+                            floorGrad.addColorStop(1, '#0e0b16');
+                            ctx.fillStyle = floorGrad;
+                            ctx.fillRect(0, height - 35, width, 35);
+                            ctx.strokeStyle = 'rgba(255, 120, 40, 0.3)';
+                            ctx.lineWidth = 2;
+                            ctx.beginPath();
+                            ctx.moveTo(cannon.x, cannon.y);
+                            ctx.lineTo(
+                              cannon.x + Math.cos(cannon.angle) * 800,
+                              cannon.y + Math.sin(cannon.angle) * 800
+                            );
+                            ctx.moveTo(0, height - 35);
+                            ctx.lineTo(width, height - 35);
+                            ctx.stroke();
+                            ctx.restore();
+
+                            // Dibujar Objetivo
+                            // 2. LÍNEA DE PUNTERÍA (Láser guía suave)
+                            if (gameState === 'PLAYING') {
+                              ctx.save();
+                              ctx.strokeStyle = 'rgba(255, 140, 40, 0.25)';
+                              ctx.lineWidth = 1.5;
+                              ctx.setLineDash([5, 7]);
+                              ctx.beginPath();
+                              ctx.moveTo(cannon.x, cannon.y);
+                              ctx.lineTo(
+                                cannon.x + Math.cos(cannon.angle) * 750,
+                                cannon.y + Math.sin(cannon.angle) * 750
+                              );
+                              ctx.stroke();
+                              ctx.restore();
+                            }
+
+                            // 3. OBJETIVO (Con brillo y estilo diana cósmica)
+                            if (target) {
+                              ctx.save();
+                              const pulseRadius = target.radius + Math.sin(targetPulse) * 2;
+                              const pulse = Math.sin(performance.now() * 0.006) * 2;
+                              const r = target.radius + pulse;
+
+                              // Resplandor exterior
+                              const glow = ctx.createRadialGradient(
+                                target.x, target.y, target.radius * 0.4,
+                                target.x, target.y, pulseRadius + 14
+                              );
+                              glow.addColorStop(0, 'rgba(255, 60, 40, 0.35)');
+                              glow.addColorStop(1, 'rgba(255, 60, 40, 0)');
+                              // Resplandor exterior (Glow)
+                              const glow = ctx.createRadialGradient(target.x, target.y, r * 0.4, target.x, target.y, r + 18);
+                              glow.addColorStop(0, `hsla(${target.hue}, 100%, 60%, 0.45)`);
+                              glow.addColorStop(1, `hsla(${target.hue}, 100%, 60%, 0)`);
+                              ctx.fillStyle = glow;
+                              ctx.beginPath();
+                              ctx.arc(target.x, target.y, pulseRadius + 14, 0, Math.PI * 2);
+                              ctx.arc(target.x, target.y, r + 18, 0, Math.PI * 2);
+                              ctx.fill();
+
+                              // Anillo exterior
+                              // Anillo exterior con borde neón
+                              ctx.beginPath();
+                              ctx.arc(target.x, target.y, pulseRadius, 0, Math.PI * 2);
+                              ctx.fillStyle = '#ff2a4b';
+                              ctx.arc(target.x, target.y, r, 0, Math.PI * 2);
+                              ctx.fillStyle = `hsl(${target.hue}, 90%, 50%)`;
+                              ctx.fill();
+                              ctx.lineWidth = 3;
+                              ctx.strokeStyle = '#fff';
+                              ctx.lineWidth = 2.5;
+                              ctx.strokeStyle = '#ffffff';
+                              ctx.stroke();
+
+                              // Anillo medio blanco
+                              // Anillo blanco intermedio
+                              ctx.beginPath();
+                              ctx.arc(target.x, target.y, pulseRadius * 0.65, 0, Math.PI * 2);
+                              ctx.arc(target.x, target.y, r * 0.65, 0, Math.PI * 2);
+                              ctx.fillStyle = '#ffffff';
+                              ctx.fill();
+
+                              // Diana central amarilla brillante
+                              // Centro brillante (Bullseye)
+                              ctx.beginPath();
+                              ctx.arc(target.x, target.y, pulseRadius * 0.32, 0, Math.PI * 2);
+                              ctx.arc(target.x, target.y, r * 0.32, 0, Math.PI * 2);
+                              ctx.fillStyle = '#ffb703';
+                              ctx.fill();
+
+                              ctx.restore();
+                            }
+
+                            // Dibujar Partículas
+                            // 4. ONDAS EXPANSIVAS (Shockwaves)
+                            for (const sw of shockwaves) {
+                              ctx.save();
+                              ctx.strokeStyle = sw.color;
+                              ctx.globalAlpha = Math.max(0, sw.alpha);
+                              ctx.lineWidth = 3.5;
+                              ctx.beginPath();
+                              ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+                              ctx.stroke();
+                              ctx.restore();
+                            }
+
+                            // 5. PARTÍCULAS
+                            for (const p of particles) {
+                              ctx.save();
+                              ctx.globalAlpha = Math.max(0, p.alpha);
+                              ctx.fillStyle = p.color;
+                              ctx.beginPath();
+                              ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                              ctx.fill();
+                              ctx.restore();
+                            }
+
+                            // Dibujar Balas (Proyectiles de fuego)
+                            // 6. BALAS INCANDESCENTES
+                            for (const b of bullets) {
+                              ctx.save();
+
+                              // Resplandor de la bala
+                              const bGlow = ctx.createRadialGradient(b.x, b.y, 2, b.x, b.y, b.radius + 8);
+                              const bGlow = ctx.createRadialGradient(b.x, b.y, 2, b.x, b.y, b.radius + 9);
+                              bGlow.addColorStop(0, '#ffffff');
+                              bGlow.addColorStop(0.3, '#ffcc00');
+                              bGlow.addColorStop(0.8, '#ff3300');
+                              bGlow.addColorStop(0.7, '#ff3300');
+                              bGlow.addColorStop(1, 'rgba(255, 50, 0, 0)');
+
+                              ctx.fillStyle = bGlow;
+                              ctx.beginPath();
+                              ctx.arc(b.x, b.y, b.radius + 8, 0, Math.PI * 2);
+                              ctx.arc(b.x, b.y, b.radius + 9, 0, Math.PI * 2);
+                              ctx.fill();
+
+                              // Núcleo brillante
+                              ctx.fillStyle = '#ffffff';
+                              ctx.beginPath();
+                              ctx.arc(b.x, b.y, b.radius * 0.6, 0, Math.PI * 2);
+                              ctx.arc(b.x, b.y, b.radius * 0.65, 0, Math.PI * 2);
+                              ctx.fill();
+
+                              ctx.restore();
+                            }
+
+                            // Dibujar Cañón
+                            // 7. CAÑÓN GIRATORIO CON LUZ
+                            ctx.save();
+                            ctx.translate(cannon.x, cannon.y);
+
+                            // 1. Cañón giratorio con retroceso
+                            // Resplandor en la base
+                            const cannonGlow = ctx.createRadialGradient(0, 0, 10, 0, 0, cannon.baseRadius * 1.5);
+                            cannonGlow.addColorStop(0, `rgba(255, 120, 40, ${0.25 * cannon.glowIntensity})`);
+                            cannonGlow.addColorStop(1, 'rgba(255, 120, 40, 0)');
+                            ctx.fillStyle = cannonGlow;
+                            ctx.beginPath();
+                            ctx.arc(0, 0, cannon.baseRadius * 1.5, Math.PI, 0, false);
+                            ctx.fill();
+
+                            // Tubo del cañón giratorio (con retroceso)
+                            ctx.save();
+                            ctx.rotate(cannon.angle);
+
+                            // Desplazamiento por retroceso
+                            const recoilOffset = -cannon.recoil;
+
+                            // Tubo del cañón
+                            const barrelGrad = ctx.createLinearGradient(0, -cannon.barrelWidth / 2, 0, cannon.barrelWidth / 2);
+                            barrelGrad.addColorStop(0, '#8c8c99');
+                            barrelGrad.addColorStop(0.5, '#444450');
+                            barrelGrad.addColorStop(1, '#22222b');
+                            barrelGrad.addColorStop(0, '#8d99ae');
+                            barrelGrad.addColorStop(0.45, '#3d405b');
+                            barrelGrad.addColorStop(1, '#1d1e2c');
+
+                            ctx.fillStyle = barrelGrad;
+                            ctx.strokeStyle = '#ff7733';
+                            ctx.lineWidth = 1.5;
+                            ctx.strokeStyle = '#ff7b00';
+                            ctx.lineWidth = 1.6;
+                            ctx.beginPath();
+                            ctx.roundRect(
+                              recoilOffset,
+                              -cannon.barrelWidth / 2,
+                              cannon.barrelLength,
+                              cannon.barrelWidth,
+                              [0, 4, 4, 0]
+                              [0, 5, 5, 0]
+                            );
+                            ctx.fill();
+                            ctx.stroke();
+
+                            // Boca del cañón (anillo de refuerzo)
+                            ctx.fillStyle = '#ff6622';
+                            // Banda de bronce/fuego en la boca
+                            ctx.fillStyle = '#ff5400';
+                            ctx.fillRect(
+                              cannon.barrelLength + recoilOffset - 4,
+                              cannon.barrelLength + recoilOffset - 5,
+                              -cannon.barrelWidth / 2 - 2,
+                              4,
+                              5,
+                              cannon.barrelWidth + 4
+                            );
+
+                            ctx.restore();
+
+                            // 2. Base fija del cañón (media esfera / torreta moderna)
+                            const baseGrad = ctx.createRadialGradient(0, 0, 8, 0, 0, cannon.baseRadius);
+                            baseGrad.addColorStop(0, '#ff7733');
+                            baseGrad.addColorStop(0.4, '#48355a');
+                            baseGrad.addColorStop(1, '#1b1424');
+                            // Base esférica fija del cañón
+                            const baseGrad = ctx.createRadialGradient(0, 0, 6, 0, 0, cannon.baseRadius);
+                            baseGrad.addColorStop(0, '#ff9e00');
+                            baseGrad.addColorStop(0.35, '#5c3d75');
+                            baseGrad.addColorStop(1, '#1b1429');
+
+                            ctx.fillStyle = baseGrad;
+                            ctx.beginPath();
+                            ctx.arc(0, 0, cannon.baseRadius, Math.PI, 0, false);
+                            ctx.closePath();
+                            ctx.fill();
+
+                            ctx.strokeStyle = '#ff8844';
+                            ctx.strokeStyle = '#ffa200';
+                            ctx.lineWidth = 2.5;
+                            ctx.stroke();
+
+                            // Núcleo central brillante de la torreta
+                            // Núcleo energético central
+                            ctx.beginPath();
+                            ctx.arc(0, 0, 10, Math.PI, 0, false);
+                            ctx.fillStyle = '#ffaa33';
+                            ctx.arc(0, 0, 11, Math.PI, 0, false);
+                            ctx.fillStyle = '#ffd166';
+                            ctx.fill();
+
+                            ctx.restore();
+
+                            // Dibujar cursor personalizado / retícula en la posición del ratón
+                            if (mouse.x > 0 && mouse.y > 0) {
+                              // 8. TEXTOS FLOTANTES (+100)
+                              for (const ft of floatTexts) {
+                                ctx.save();
+                                ctx.strokeStyle = '#ff9933';
+                                ctx.globalAlpha = Math.max(0, ft.alpha);
+                                ctx.font = 'bold 20px "Segoe UI", sans-serif';
+                                ctx.fillStyle = '#ffe066';
+                                ctx.shadowColor = '#ff6600';
+                                ctx.shadowBlur = 8;
+                                ctx.textAlign = 'center';
+                                ctx.fillText(ft.text, ft.x, ft.y);
+                                ctx.restore();
+                              }
+
+                              // 9. MIRA TELEMÉTRICA EN EL RATÓN
+                              if (mouse.x > 0 && mouse.y > 0 && gameState === 'PLAYING') {
+                                ctx.save();
+                                ctx.strokeStyle = '#ff9e00';
+                                ctx.lineWidth = 1.5;
+
+                                // Círculo de la mira
+                                ctx.beginPath();
+                                ctx.arc(mouse.x, mouse.y, 10, 0, Math.PI * 2);
+                                ctx.arc(mouse.x, mouse.y, 11, 0, Math.PI * 2);
+                                ctx.stroke();
+
+                                // Cruz central
+                                ctx.beginPath();
+                                ctx.moveTo(mouse.x - 14, mouse.y);
+                                ctx.lineTo(mouse.x - 5, mouse.y);
+                                ctx.moveTo(mouse.x + 5, mouse.y);
+                                ctx.lineTo(mouse.x + 14, mouse.y);
+                                ctx.moveTo(mouse.x, mouse.y - 14);
+                                ctx.lineTo(mouse.x, mouse.y - 5);
+                                ctx.moveTo(mouse.x, mouse.y + 5);
+                                ctx.lineTo(mouse.x, mouse.y + 14);
+                                ctx.moveTo(mouse.x - 16, mouse.y); ctx.lineTo(mouse.x - 6, mouse.y);
+                                ctx.moveTo(mouse.x + 6, mouse.y); ctx.lineTo(mouse.x + 16, mouse.y);
+                                ctx.moveTo(mouse.x, mouse.y - 16); ctx.lineTo(mouse.x, mouse.y - 6);
+                                ctx.moveTo(mouse.x, mouse.y + 6); ctx.lineTo(mouse.x, mouse.y + 16);
+                                ctx.stroke();
+
+                                ctx.restore();
+                              }
+
+                              ctx.restore();
+                            }
+
+                            // Bucle Principal 60 FPS
+                            function gameLoop() {
+                              update();
+                              draw();
+                              requestAnimationFrame(gameLoop);
+                            }
+
+                            // Inicializar
+                            // Inicio
+                            resizeCanvas();
+                            requestAnimationFrame(gameLoop);
+    </script>
+</body>
+
+</html>
